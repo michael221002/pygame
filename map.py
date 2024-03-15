@@ -1,19 +1,24 @@
 import os
 
+from room import Room
+
 
 class Map:
+
     def __init__(self, x, y):
-        self.map = [[' ' for _ in range(x)] for _ in range(y)]
-        self.player_location = [0, 0]
+        self.playerIcon = 'X'
+
+        self.map = [[Room() for _ in range(x)] for _ in range(y)]
+        self.player_location = [5, 5]
         self.update_player_location()
 
     def update_player_location(self):
-        # Zuerst die Karte bereinigen
+        # Zuerst die Karte bereinigen und `has_player` für alle Räume auf False setzen
         for y in range(len(self.map)):
             for x in range(len(self.map[y])):
-                self.map[y][x] = ' '
-        # Dann den Spieler an der neuen Position eintragen
-        self.map[self.player_location[1]][self.player_location[0]] = 'P'
+                self.map[y][x].has_player = False  # Spieler ist hier nicht
+        # Dann den Spieler an der neuen Position markieren
+        self.map[self.player_location[1]][self.player_location[0]].has_player = True
 
     def move_player(self, direction):
         if direction == "vorwärts" and self.player_location[1] > 0:
@@ -32,4 +37,12 @@ class Map:
     def display(self):
         self.clear_console()
         for row in self.map:
-            print(row)
+            rowGesamt = ''
+            for room in row:
+                rowGesamt += room.display_icon + '  '  # Verwende `display_icon` für die Darstellung
+            print(rowGesamt)
+
+    def get_current_room_for_player(self):
+        # Greift auf die Position des Spielers zu und gibt den entsprechenden Raum zurück
+        current_room = self.map[self.player_location[1]][self.player_location[0]]
+        return current_room

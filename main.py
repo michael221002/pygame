@@ -7,7 +7,7 @@ import time
 class Startup:
     def __init__(self):
         print("Anwendung gestartet!")
-        self.map = Map(10, 10)
+        self.map = Map(25, 25)
         self.map.display()
         self.player = Player('Der ultimative Micha')
         self.player.show_inventory()
@@ -15,13 +15,13 @@ class Startup:
         self.map.display()
         self.player.show_inventory()
         while True:
-            if keyboard.is_pressed('up'):
+            if keyboard.is_pressed('up') or (keyboard.is_pressed('w')):
                 direction = 'vorwärts'
-            elif keyboard.is_pressed('down'):
+            elif keyboard.is_pressed('down') or (keyboard.is_pressed('s')):
                 direction = 'rückwärts'
-            elif keyboard.is_pressed('left'):
+            elif keyboard.is_pressed('left') or (keyboard.is_pressed('a')):
                 direction = 'links'
-            elif keyboard.is_pressed('right'):
+            elif keyboard.is_pressed('right') or (keyboard.is_pressed('d')):
                 direction = 'rechts'
             elif keyboard.is_pressed('esc'):
                 print("Spiel beendet.")
@@ -34,6 +34,8 @@ class Startup:
             self.map.move_player(direction)
             self.map.display()
             self.player.show_inventory()
+            print(f"Du befindest dich jetzt in: {self.map.get_current_room_for_player().roomName}")
+
             time.sleep(0.1)
 
 if __name__ =="__main__":
