@@ -15,3 +15,9 @@ class Player:
                 print(f"- {item}")
         else:
             print(f"{self.name} hat ein leeres Inventar.")
+
+    def pick_up_item(self, room):
+        if room.objectInRoom:
+            self.add_to_inventory(room.objectInRoom)
+            print(f"{self.name} hat {room.objectInRoom} aufgehoben.")
+            room.objectInRoom = None  # Entfernt den Gegenstand aus dem Raum

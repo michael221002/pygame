@@ -1,5 +1,7 @@
 import os
+import random
 
+from key import Key
 from room import Room
 
 
@@ -11,6 +13,18 @@ class Map:
         self.map = [[Room() for _ in range(x)] for _ in range(y)]
         self.player_location = [5, 5]
         self.update_player_location()
+        self.place_items_randomly(10)
+
+    def place_items_randomly(self, num_items):
+        for _ in range(num_items):
+            item_placed = False
+            while not item_placed:
+                x = random.randint(0, len(self.map[0]) - 1)
+                y = random.randint(0, len(self.map) - 1)
+                if not self.map[y][x].objectInRoom:  # Prüft, ob der Raum leer ist
+                    self.map[y][x].objectInRoom = Key(29380)  # Beispiel: Platziert einen Schlüssel
+                    self.map[y][x].roomIcon = '#'
+                    item_placed = True
 
     def update_player_location(self):
         # Zuerst die Karte bereinigen und `has_player` für alle Räume auf False setzen

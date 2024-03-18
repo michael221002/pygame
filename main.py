@@ -7,7 +7,7 @@ import time
 class Startup:
     def __init__(self):
         print("Anwendung gestartet!")
-        self.map = Map(25, 25)
+        self.map = Map(10, 10)
         self.map.display()
         self.player = Player('Der ultimative Micha')
         self.player.show_inventory()
@@ -34,7 +34,11 @@ class Startup:
             self.map.move_player(direction)
             self.map.display()
             self.player.show_inventory()
-            print(f"Du befindest dich jetzt in: {self.map.get_current_room_for_player().roomName}")
+            current_room = self.map.get_current_room_for_player()
+            print(f"Du befindest dich jetzt in: {current_room.roomName}")
+            if current_room.objectInRoom != None:
+                print(f"Hey du hast ein item gefunden: {current_room.objectInRoom.itemName}")
+            self.player.pick_up_item(current_room)
 
             time.sleep(0.1)
 

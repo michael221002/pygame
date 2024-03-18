@@ -3,6 +3,7 @@ class Room:
         self.roomIcon = '□'  # Hier hast du 'roomIcon' genannt
         self.roomName = 'empty Room'
         self.has_player = False  # Dieses Attribut fehlte in deinem Originalcode
+        self.objectInRoom = None
 
     @property
     def display_icon(self):
