@@ -35,10 +35,12 @@ class Startup:
             self.map.display()
             self.player.show_inventory()
             current_room = self.map.get_current_room_for_player()
-            print(f"Du befindest dich jetzt in: {current_room.roomName}")
+            print(f"Du befindest dich jetzt in: {current_room.roomName}             X = Player | # = Etwas ist im Raum")
             if current_room.objectInRoom != None:
                 print(f"Hey du hast ein item gefunden: {current_room.objectInRoom.itemName}")
-            self.player.pick_up_item(current_room)
+                awnser = input("Möchtest du diesen mitnehmen? (y/n): ")
+                if awnser == 'y':
+                    self.player.pick_up_item(current_room)
 
             time.sleep(0.1)
 
