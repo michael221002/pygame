@@ -1,7 +1,9 @@
 import os
 import random
 
+from Potion import Potion
 from key import Key
+from monster import Monster
 from room import Room
 
 
@@ -12,8 +14,47 @@ class Map:
 
         self.map = [[Room() for _ in range(x)] for _ in range(y)]
         self.player_location = [5, 5]
+        self.start_location = [5, 5]
         self.update_player_location()
-        self.place_items_randomly(10)
+        self.place_items_randomly(1)
+        self.create_garden()
+
+    def get_next_room(self, direction):
+        new_x, new_y = self.player_location
+        if direction == "vorwärts" and new_y > 0:
+            new_y -= 1
+        elif direction == "rückwärts" and new_y < len(self.map) - 1:
+            new_y += 1
+        elif direction == "links" and new_x > 0:
+            new_x -= 1
+        elif direction == "rechts" and new_x < len(self.map[0]) - 1:
+            new_x += 1
+
+        # Gibt den Raum an der neuen Position zurück, ohne die Position des Spielers zu aktualisieren
+        return self.map[new_y][new_x].roomName
+
+    def create_garden(self):
+        garden_placed = False
+        while not garden_placed:
+            x = random.randint(0, len(self.map[0]) - 1)
+            y = random.randint(0, len(self.map) - 1)
+            room = self.map[y][x]
+            if room.objectInRoom is None:  # Prüft, ob der Raum leer ist
+                # Ändert die Eigenschaften des Raums, um ihn zu einem Garten zu machen
+                room.roomIcon = '▒'  # Oder jedes andere Icon, das du für den Garten verwenden möchtest
+                room.roomName = 'Garden'
+                garden_placed = True
+
+    def is_monster_in_room(self):
+        # Greift auf den aktuellen Raum des Spielers zu
+        current_room = self.map[self.player_location[1]][self.player_location[0]]
+        # Prüft, ob im aktuellen Raum ein Monster vorhanden ist
+        if isinstance(current_room.objectInRoom, Monster):
+            self.player_location = self.start_location.copy()  # Spieler zurück zum Start setzen
+            self.update_player_location()
+            return True, current_room.objectInRoom.monsterName
+        else:
+            return False, None
 
     def place_items_randomly(self, num_items):
         for _ in range(num_items):
@@ -22,7 +63,27 @@ class Map:
                 x = random.randint(0, len(self.map[0]) - 1)
                 y = random.randint(0, len(self.map) - 1)
                 if not self.map[y][x].objectInRoom:  # Prüft, ob der Raum leer ist
-                    self.map[y][x].objectInRoom = Key(29380)  # Beispiel: Platziert einen Schlüssel
+                    self.map[y][x].objectInRoom = Key('Key to Garden')  # Beispiel: Platziert einen Schlüssel
+                    self.map[y][x].roomIcon = '#'
+                    item_placed = True
+
+        for _ in range(num_items):
+            item_placed = False
+            while not item_placed:
+                x = random.randint(0, len(self.map[0]) - 1)
+                y = random.randint(0, len(self.map) - 1)
+                if not self.map[y][x].objectInRoom:  # Prüft, ob der Raum leer ist
+                    self.map[y][x].objectInRoom = Potion('Healthy - Potion')  # Beispiel: Platziert einen Schlüssel
+                    self.map[y][x].roomIcon = '#'
+                    item_placed = True
+
+        for _ in range(num_items + 1):
+            item_placed = False
+            while not item_placed:
+                x = random.randint(0, len(self.map[0]) - 1)
+                y = random.randint(0, len(self.map) - 1)
+                if not self.map[y][x].objectInRoom:  # Prüft, ob der Raum leer ist
+                    self.map[y][x].objectInRoom = Monster('Gustav')  # Beispiel: Platziert einen Schlüssel
                     self.map[y][x].roomIcon = '#'
                     item_placed = True
 

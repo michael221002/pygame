@@ -14,7 +14,11 @@ class Startup:
     def run(self):
         self.map.display()
         self.player.show_inventory()
+        won = False;
         while True:
+
+            output = ''
+
             if keyboard.is_pressed('up') or (keyboard.is_pressed('w')):
                 direction = 'vorwärts'
             elif keyboard.is_pressed('down') or (keyboard.is_pressed('s')):
@@ -31,16 +35,40 @@ class Startup:
                 time.sleep(0.1)
                 continue  # Springt zurück zum Anfang der Schleife, wenn keine Taste gedrückt wurde
 
-            self.map.move_player(direction)
+
+            if (self.map.get_next_room(direction) != 'Garden'):
+                self.map.move_player(direction)
+            else:
+                if len(self.player.inventory) == 2:
+                    self.map.move_player(direction)
+                    output = 'Du hast gewonnen'
+                    won = True
+                else:
+                    output = '''Du hast noch nicht ale Items'''
+
             self.map.display()
             self.player.show_inventory()
+
+            if output != '':
+                if (won):
+                    print(output)
+                    exit(0)
+                else:
+                    print(output)
+
+
             current_room = self.map.get_current_room_for_player()
             print(f"Du befindest dich jetzt in: {current_room.roomName}             X = Player | # = Etwas ist im Raum")
             if current_room.objectInRoom != None:
-                print(f"Hey du hast ein item gefunden: {current_room.objectInRoom.itemName}")
-                awnser = input("Möchtest du diesen mitnehmen? (y/n): ")
-                if awnser == 'y':
-                    self.player.pick_up_item(current_room)
+                monster_in_room, monster_name = self.map.is_monster_in_room()
+                if monster_in_room:
+                    print(f"Achtung! Ein wildes Monster erscheint: {monster_name}")
+                    print("Du wirst zum Start zurückgesetzt")
+                else:
+                    print(f"Hey du hast ein item gefunden: {current_room.objectInRoom.itemName}")
+                    awnser = input("Möchtest du diesen mitnehmen? (y/n): ")
+                    if awnser == 'y':
+                        self.player.pick_up_item(current_room)
 
             time.sleep(0.1)
 
