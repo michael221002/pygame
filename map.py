@@ -5,6 +5,8 @@ from Potion import Potion
 from key import Key
 from monster import Monster
 from room import Room
+from BeamOMat import BeamOMat
+from bookOfLife import BookOfLife
 
 
 class Map:
@@ -18,6 +20,24 @@ class Map:
         self.update_player_location()
         self.place_items_randomly(1)
         self.create_garden()
+        self.create_rooms()
+
+    def create_rooms(self):
+        self.create_room('library', BookOfLife('Wissen'), 'L')
+        self.create_room('office', None, 'O')
+        self.create_room('laboratory', BeamOMat('Teleportation'), 'B')
+
+    def create_room(self, room_name, item, icon):
+        room_placed = False
+        while not room_placed:
+            x = random.randint(0, len(self.map[0]) - 1)
+            y = random.randint(0, len(self.map) - 1)
+            room = self.map[y][x]
+            if room.objectInRoom is None:  # Prüft, ob der Raum leer ist
+                room.roomName = room_name
+                room.objectInRoom = item
+                room.roomIcon = icon  # Setzt das Icon für den Raum
+                room_placed = True
 
     def get_next_room(self, direction):
         new_x, new_y = self.player_location

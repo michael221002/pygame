@@ -1,6 +1,8 @@
 import os
 
 import keyboard
+
+from BeamOMat import BeamOMat
 from map import Map
 from player import Player
 import time
@@ -35,11 +37,14 @@ class Startup:
                 time.sleep(0.1)
                 continue  # Springt zurück zum Anfang der Schleife, wenn keine Taste gedrückt wurde
 
-
             if (self.map.get_next_room(direction) != 'Garden'):
                 self.map.move_player(direction)
+
+                if self.map.get_current_room_for_player().roomName == 'laboratory' and self.player.has_item('BookOfLife') and self.player.has_item('Beam-O-Mat'):
+                    output = 'Du hast gewonnen'
+                    won = True
             else:
-                if len(self.player.inventory) == 2:
+                if ('Garden' in self.map.get_next_room(direction) and self.player.has_item('Key') and self.player.has_item('Potion')):
                     self.map.move_player(direction)
                     output = 'Du hast gewonnen'
                     won = True

@@ -16,6 +16,9 @@ class Player:
         else:
             print(f"{self.name} hat ein leeres Inventar.")
 
+    def has_item(self, item_name):
+        return any(item.itemName == item_name for item in self.inventory)
+
     def pick_up_item(self, room):
         if room.objectInRoom:
             self.add_to_inventory(room.objectInRoom)
